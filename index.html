@@ -1,0 +1,1033 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sytrex – Minecraft Developer & Creator</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="icon" href="avatar.png" type="image/x-icon" />
+    <style>
+      :root {
+        --bg: #0a0e17;
+        --surface: rgba(20, 25, 40, 0.55);
+        --card: rgba(25, 35, 60, 0.45);
+        --accent: #00ff9d;
+        --accent-dark: #00d68f;
+        --accent-glow: rgba(0, 255, 157, 0.35);
+        --text: #f0fdfa;
+        --text-light: #a3bffa;
+        --border: rgba(0, 255, 157, 0.18);
+        --radius: 1.25rem;
+        --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: linear-gradient(135deg, #0a0e17 0%, #0f1c2e 100%);
+        background-image: url(bg1.png);
+        background-size: cover;
+        background-position: center 30%;
+        background-attachment: fixed;
+        color: var(--text);
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        line-height: 1.6;
+        min-height: 100dvh;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(8, 12, 22, 0.72);
+        backdrop-filter: blur(2px);
+        z-index: -2;
+      }
+      .navbar {
+        position: fixed;
+        top: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(10, 15, 30, 0.38);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(0, 255, 157, 0.16);
+        border-radius: 999px;
+        padding: 0.8rem 2.4rem;
+        z-index: 1000;
+        box-shadow:
+          0 10px 35px rgba(0, 0, 0, 0.4),
+          inset 0 0 0 1px rgba(0, 255, 157, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: clamp(2rem, 6vw, 5.5rem);
+        font-size: clamp(0.97rem, 2.1vw, 1.08rem);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        max-width: 95vw;
+      }
+      .navbar.scrolled {
+        top: 0.6rem;
+        padding: 0.7rem 2.1rem;
+        background: rgba(10, 15, 30, 0.48);
+        box-shadow:
+          0 18px 55px rgba(0, 0, 0, 0.55),
+          0 0 30px var(--accent-glow);
+        border-color: rgba(0, 255, 157, 0.24);
+      }
+      .nav-logo {
+        font-weight: 900;
+        font-size: clamp(1.4rem, 4.2vw, 1.7rem);
+        color: var(--accent);
+        text-shadow: 0 0 14px var(--accent-glow);
+        text-decoration: none;
+        letter-spacing: -0.03em;
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: clamp(1.8rem, 5vw, 3.8rem);
+      }
+      .nav-links a {
+        color: var(--text-light);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.35s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        position: relative;
+        padding: 0.5rem 0.3rem;
+      }
+      .nav-links a i {
+        font-size: clamp(1.15rem, 2.8vw, 1.35rem);
+        transition: all 0.35s ease;
+      }
+      .nav-links a span {
+        transition: all 0.35s ease;
+      }
+      .nav-links a:hover,
+      .nav-links a:focus,
+      .nav-links a.active {
+        color: var(--accent);
+        text-shadow: 0 0 12px var(--accent-glow);
+      }
+      .nav-links a:hover i,
+      .nav-links a:focus i {
+        transform: scale(1.18) translateY(-1px);
+      }
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2.5px;
+        bottom: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--accent);
+        border-radius: 3px;
+        transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 0 12px var(--accent-glow);
+      }
+      .nav-links a:hover::after,
+      .nav-links a:focus::after {
+        width: 70%;
+      }
+      @media (max-width: 780px) {
+        .navbar {
+          padding: 0.75rem 1.6rem;
+          gap: 2.2rem;
+          top: 0.8rem;
+        }
+        .nav-links {
+          gap: 1.6rem;
+        }
+        .nav-links a {
+          flex-direction: column;
+          gap: 0.35rem;
+          font-size: 0.92rem;
+          padding: 0.4rem 0.6rem;
+        }
+        .nav-links a i {
+          font-size: clamp(1.4rem, 5vw, 1.65rem);
+        }
+      }
+      @media (max-width: 780px) {
+        .navbar {
+          padding: 0.7rem 1.4rem;
+          gap: 1.8rem;
+        }
+        .nav-links {
+          gap: clamp(1.1rem, 4.5vw, 2rem);
+        }
+        .nav-links a {
+          font-size: clamp(0.88rem, 3vw, 0.96rem);
+          padding: 0.5rem 0.6rem;
+        }
+        .nav-links a i {
+          font-size: clamp(1.25rem, 4.5vw, 1.45rem);
+        }
+      }
+      @media (max-width: 680px) {
+        .nav-links a span {
+          display: none;
+        }
+        .nav-links a {
+          font-size: 0;
+          padding: 0.7rem;
+          border-radius: 50%;
+          width: 44px;
+          height: 44px;
+          justify-content: center;
+          align-items: center;
+        }
+        .nav-logo {
+          opacity: 0;
+        }
+        .nav-links a i {
+          font-size: clamp(1.3rem, 5.2vw, 1.55rem);
+          margin-left: -180px;
+        }
+        .nav-links {
+          gap: 1.6rem;
+        }
+      }
+      .links-section {
+        padding: 6rem 0;
+      }
+      .server-showcase {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3.5rem;
+        align-items: center;
+        max-width: 1100px;
+        margin: 0 auto;
+        border-radius: 20px;
+      }
+      .server-image {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        background-color: none;
+        transition: var(--transition);
+      }
+      .server-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: transform 0.6s ease;
+      }
+      .image-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: flex-end;
+        padding: 2.5rem 2.5rem 2rem;
+        opacity: 0.92;
+      }
+      .overlay-content {
+        color: rgb(215, 204, 204);
+      }
+      .overlay-content h3 {
+        font-size: 2.1rem;
+        margin-bottom: 0.4rem;
+        text-shadow: 0 3px 12px black;
+      }
+      .overlay-content p {
+        font-size: 1.15rem;
+        opacity: 0.9;
+      }
+      .status-pill {
+        display: inline-block;
+        background: rgba(0, 255, 157, 0.25);
+        color: var(--accent);
+        padding: 0.5rem 1.1rem;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-top: 1rem;
+        backdrop-filter: blur(6px);
+        border: 1px solid var(--accent);
+      }
+      .server-description {
+        padding: 1rem;
+      }
+      .lead {
+        font-size: 1.35rem;
+        line-height: 1.7;
+        margin-bottom: 2.5rem;
+        color: var(--text-light);
+      }
+      .action-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin: 2.5rem 0;
+      }
+      .btn {
+        min-width: 240px;
+        justify-content: center;
+        font-size: 1.1rem;
+        padding: 1.3rem 2rem;
+      }
+      .btn-minecraft {
+        background: linear-gradient(135deg, #1e88e5, #1565c0);
+        border-color: #42a5f5;
+        color: white;
+      }
+      .btn-minecraft:hover {
+        background: linear-gradient(135deg, #42a5f5, #1e88e5);
+        transform: translateY(-6px) scale(1.04);
+      }
+      .btn-discord i,
+      .btn-minecraft i {
+        font-size: 1.6rem;
+      }
+      .note {
+        display: block;
+        text-align: center;
+        color: var(--text-light);
+        opacity: 0.7;
+        margin-top: 1.5rem;
+        font-size: 0.95rem;
+      }
+      @media (max-width: 960px) {
+        .server-showcase {
+          grid-template-columns: 1fr;
+          gap: 3rem;
+        }
+        .server-image {
+          max-width: 90%;
+          margin: 0 auto;
+        }
+      }
+      .container {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+        position: relative;
+        z-index: 1;
+      }
+      header {
+        text-align: center;
+        padding: 9rem 0 6rem;
+      }
+      .avatar-container {
+        width: clamp(150px, 35vw, 240px);
+        height: clamp(150px, 35vw, 240px);
+        margin: 0 auto 2.5rem;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 5px solid rgba(0, 255, 157, 0.28);
+        box-shadow:
+          0 0 60px var(--accent-glow),
+          inset 0 0 20px rgba(0, 255, 157, 0.15);
+        background: var(--card);
+        backdrop-filter: blur(4px);
+      }
+      html {
+        scroll-snap-type: y mandatory;
+      }
+      section {
+        scroll-snap-align: start;
+      }
+      .avatar-container:hover {
+        transform: scale(1.05) rotate(1.5deg);
+        box-shadow: 0 0 100px var(--accent-glow);
+      }
+      .avatar-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .logo {
+        font-size: clamp(3.5rem, 10vw, 8rem);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        background: linear-gradient(
+          90deg,
+          var(--accent),
+          #34d399,
+          var(--accent-dark)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 45px var(--accent-glow);
+        margin-bottom: 1rem;
+      }
+      .tagline {
+        font-size: clamp(1.4rem, 4vw, 2rem);
+        color: var(--text-light);
+        margin-bottom: 3rem;
+      }
+      .description-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2.5rem;
+        margin: 4rem 0 5rem;
+        text-align: left;
+      }
+      .desc-box {
+        background: var(--card);
+        backdrop-filter: blur(16px);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 2rem 2.2rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        transition: var(--transition);
+      }
+      .desc-box:hover {
+        transform: translateY(-10px);
+        border-color: var(--accent);
+        box-shadow: 0 20px 60px -15px var(--accent-glow);
+      }
+      .desc-box h3 {
+        font-size: 1.6rem;
+        color: var(--accent);
+        margin-bottom: 1rem;
+      }
+      h2 {
+        font-size: clamp(2.6rem, 7.5vw, 4.5rem);
+        font-weight: 800;
+        text-align: center;
+        margin: 1rem 0 3.5rem;
+        background: linear-gradient(90deg, var(--accent), #5eead4);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        position: relative;
+      }
+      h2::after {
+        content: "";
+        position: absolute;
+        width: 140px;
+        height: 6px;
+        background: var(--accent);
+        bottom: -1.2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        box-shadow: 0 0 25px var(--accent-glow);
+      }
+      .social-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.6rem 2.2rem;
+      }
+      .social-btn small {
+        display: block;
+        margin-top: 0.5rem;
+        font-weight: normal;
+        opacity: 0.75;
+        line-height: 1.3;
+      }
+      .social-btn:hover small {
+        opacity: 0.95;
+      }
+      .social-btn {
+        min-width: 220px;
+        padding: 1.1rem 2.2rem;
+        border-radius: var(--radius);
+        font-size: 1.1rem;
+        font-weight: 700;
+        text-decoration: none;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.9rem;
+        background: var(--card);
+        backdrop-filter: blur(16px);
+        border: 1px solid var(--border);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+        transition: var(--transition);
+      }
+      section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+      }
+      section > * {
+        width: 100%;
+      }
+      .social-btn:hover {
+        transform: translateY(-6px);
+        box-shadow:
+          0 20px 50px -10px rgba(0, 0, 0, 0.55),
+          0 0 35px var(--accent-glow);
+        border-color: var(--accent);
+      }
+      .youtube {
+        background: linear-gradient(145deg, #ff0000, #cc0000);
+      }
+      .twitch {
+        background: linear-gradient(145deg, #9146ff, #772ce8);
+      }
+      .discord {
+        background: linear-gradient(145deg, #5865f2, #4752c4);
+      }
+      .github {
+        background: linear-gradient(145deg, #171717, #0f0f0f);
+        color: #e5e5e5;
+      }
+      .tiktok {
+        background: linear-gradient(145deg, #000000, #111111);
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.2rem 3rem;
+        background: var(--card);
+        backdrop-filter: blur(16px);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 1.15rem;
+        text-decoration: none;
+        transition: var(--transition);
+        box-shadow: 0 8px 35px rgba(0, 0, 0, 0.3);
+        margin: 1rem 0.8rem;
+      }
+      .btn:hover {
+        background: linear-gradient(135deg, var(--accent), #10b981);
+        color: #0f172a;
+        transform: translateY(-6px);
+        box-shadow: 0 20px 50px -12px var(--accent-glow);
+      }
+      .videos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        gap: 2.5rem;
+        margin: 4rem 0;
+      }
+      .video-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+        transition: var(--transition);
+      }
+      .video-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 30px 80px -15px var(--accent-glow);
+        border-color: var(--accent);
+      }
+      .video-wrapper {
+        position: relative;
+        padding-bottom: 56.25%;
+        background: #000;
+      }
+      .video-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+      .video-info {
+        padding: 1.6rem 2rem 2rem;
+      }
+      .video-info h3 {
+        font-size: 1.7rem;
+        color: var(--accent);
+        margin-bottom: 0.8rem;
+      }
+      footer {
+        text-align: center;
+        padding: 5rem 0 3rem;
+        color: var(--text-light);
+        font-size: 1.1rem;
+        border-top: 1px solid var(--border);
+        margin-top: 6rem;
+      }
+      footer span {
+        color: var(--accent);
+        font-weight: 700;
+        text-shadow: 0 0 10px var(--accent-glow);
+      }
+      @media (max-width: 960px) {
+        .videos-grid {
+          grid-template-columns: 1fr;
+        }
+        .status-pill {
+          opacity: 0;
+        }
+        .overlay-content {
+          opacity: 0;
+        }
+      }
+      @media (max-width: 640px) {
+        header {
+          padding: 7rem 0 4rem;
+        }
+        .description-grid {
+          gap: 2rem;
+        }
+        .desc-box {
+          padding: 1.8rem;
+        }
+      }
+      .memories-section {
+        padding: 7rem 0 9rem;
+      }
+      .section-subtitle {
+        text-align: center;
+        font-size: 1.3rem;
+        color: var(--text-light);
+        margin: -1.5rem 0 5rem;
+        opacity: 0.85;
+      }
+      .timeline-content {
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+        position: relative;
+        z-index: 2;
+      }
+      .timeline-item.left .timeline-content {
+        flex-direction: row-reverse;
+        text-align: right;
+      }
+      .timeline-image {
+        width: 48%;
+        flex-shrink: 0;
+        border-radius: var(--radius);
+        overflow: hidden;
+        aspect-ratio: 16 / 9;
+        box-shadow:
+          0 15px 45px rgba(0, 0, 0, 0.5),
+          0 0 35px var(--accent-glow);
+        transition: var(--transition);
+        border: 2px solid rgba(0, 255, 157, 0.25);
+        background: rgba(0, 0, 0, 0.4);
+      }
+      .timeline-image img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: center;
+        transition: transform 0.7s ease;
+      }
+      .timeline-text {
+        width: 55%;
+        background: var(--card);
+        backdrop-filter: blur(16px);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 2rem 2.5rem;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        transition: var(--transition);
+      }
+      .timeline-text h3 {
+        font-size: 1.9rem;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 12px var(--accent-glow);
+      }
+      .date {
+        font-size: 1rem;
+        color: var(--text-light);
+        opacity: 0.7;
+        margin-bottom: 1rem;
+        font-weight: 500;
+      }
+      .timeline-text p {
+        font-size: 1.15rem;
+        line-height: 1.7;
+      }
+      @media (max-width: 960px) {
+        .timeline::before {
+          left: 2.2rem;
+        }
+        .timeline-content {
+          flex-direction: column !important;
+          text-align: center !important;
+          gap: 1.8rem;
+        }
+        .timeline-image,
+        .timeline-text {
+          width: 100%;
+        }
+        .timeline-item.left .timeline-content,
+        .timeline-item.right .timeline-content {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="#" class="nav-logo">Sytrex</a>
+      <div class="nav-links">
+        <a href="#links" title="Links"
+          ><i class="fas fa-link"></i><span>Links</span></a
+        >
+        <a href="#memories" title="Projekte"
+          ><i class="fas fa-star"></i><span>Reise</span></a
+        >
+        <a href="#socials" title="Socials"
+          ><i class="fas fa-users"></i><span>Socials</span></a
+        >
+        <a href="#videos" title="Videos"
+          ><i class="fas fa-video"></i><span>Videos</span></a
+        >
+      </div>
+    </nav>
+    <div class="container">
+      <section>
+        <header>
+          <div class="avatar-container">
+            <img src="avatar.png" alt="Sytrex Avatar" />
+          </div>
+          <div class="logo">Sytrex</div>
+          <div class="tagline">
+            Minecraft Server Developer & Content Creator
+          </div>
+          <div class="description-grid">
+            <div class="desc-box">
+              <h3>Über mich</h3>
+              <p>
+                Hey! Ich bin Sytrex, leidenschaftlicher Minecraft-Entwickler,
+                Plugin-Programmierer und Content Creator. Seit über 6 Jahren
+                baue ich eigene Server, entwickle komplexe Plugins und erstelle
+                hochwertige Builds. Auf meinem Netzwerk Sytrex.NET findest du
+                einzigartige Spielmodi, die es so nirgendwo anders gibt.
+              </p>
+            </div>
+            <div class="desc-box">
+              <h3>Was ich mache</h3>
+              <p>
+                Aktuell arbeite ich an neuen Citybuild-Features, einem eigenen
+                Core-System, Custom-Plugins in Java, professionellen Maps mit
+                WorldEdit/VoxelSniper und produziere regelmäßig YouTube-Videos &
+                Streams. Komm gerne auf Discord vorbei, wir haben eine super
+                Community!
+              </p>
+            </div>
+          </div>
+        </header>
+      </section>
+      <section id="links" class="links-section">
+        <h2>Community & Server</h2>
+        <div class="server-showcase">
+          <div class="server-image">
+            <img
+              src="sytrex.png"
+              alt="Sytrex.NET Citybuild Spawn"
+              loading="lazy"
+            />
+            <div class="image-overlay">
+              <div class="overlay-content">
+                <h3>Sytrex.NET</h3>
+                <p>Dein einzigartiger Citybuild & mehr</p>
+                <div class="status-pill">Online · 24/7</div>
+              </div>
+            </div>
+          </div>
+          <div class="server-description">
+            <p class="lead">
+              Tritt ein in eine Welt mit einzigartigen Spielmodi,
+              <strong>Custom-Plugins</strong>, riesigen Citybuild-Areas, Jobs,
+              Rängen und einer mega Community!
+            </p>
+            <div class="action-buttons">
+              <a
+                href="https://discord.gg/Zx6hG7WNYu"
+                class="btn btn-discord"
+                target="_blank"
+              >
+                <i class="fab fa-discord"></i>
+                <span>Discord beitreten</span>
+              </a>
+              <a
+                href="minecraft://server/Sytrex.NET"
+                class="btn btn-minecraft"
+                onclick="copyIp(event)"
+              >
+                <i class="fas fa-server"></i>
+                <span>Community Server</span>
+              </a>
+            </div>
+            <small class="note">Java & Bedrock – Version 1.8–1.21+</small>
+          </div>
+        </div>
+      </section>
+      <section id="memories" class="memories-section">
+        <h2>Meine Reise</h2>
+        <p class="section-subtitle">
+          Vom alten Laptop bis zur Community – so fing alles an
+        </p>
+        <div class="timeline">
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <div class="timeline-image">
+                <img
+                  src="friends.png"
+                  alt="Erster Server auf altem Laptop"
+                  loading="lazy"
+                />
+              </div>
+              <div class="timeline-text">
+                <h3>Der Anfang</h3>
+                <div class="date">~2018/2019</div>
+                <p>
+                  Mein erster Minecraft-Server lief noch auf einem alten Laptop
+                  – mit 5 Spielern online war ich schon mega stolz. Hier hat
+                  wirklich alles begonnen.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item right">
+            <div class="timeline-content">
+              <div class="timeline-image">
+                <img
+                  src="friends2.png"
+                  alt="Erstes großes Custom Plugin"
+                  loading="lazy"
+                />
+              </div>
+              <div class="timeline-text">
+                <h3>Erstes großes Plugin</h3>
+                <div class="date">~2020</div>
+                <p>
+                  Mein eigenes Citybuild-System mit Jobs, Rängen, Quests und
+                  unzähligen Custom-Features – komplett selbst in Java
+                  programmiert.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <div class="timeline-image">
+                <img
+                  src="friends3.png"
+                  alt="Erstes großes Custom Plugin"
+                  loading="lazy"
+                />
+              </div>
+              <div class="timeline-text">
+                <h3>Minecraft Server Launch</h3>
+                <div class="date">~2026</div>
+                <p>
+                  Mittlerweile habe ich meinen großen Minecraft Server mit
+                  hunderten von Spielern.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section style="text-align: center; padding: 7rem 0 9rem" id="socials">
+        <h2>Socials</h2>
+        <p class="section-subtitle" style="margin-bottom: 4rem">
+          Wo du mich live siehst, neue Videos findest und mit der Community
+          quatschen kannst
+        </p>
+        <div
+          class="social-buttons"
+          style="max-width: 1100px; margin: 0 auto; justify-content: center"
+        >
+          <a
+            href="https://www.youtube.com/channel/UC60_Zdu6cCCEGJd6hemzjiw"
+            class="social-btn youtube"
+            target="_blank"
+            style="
+              min-width: 260px;
+              padding: 1.4rem 2.5rem;
+              font-size: 1.25rem;
+              order: -2;
+            "
+          >
+            <i class="fab fa-youtube"></i>
+            YouTube
+            <small
+              style="
+                display: block;
+                font-size: 0.82rem;
+                margin-top: 0.4rem;
+                opacity: 0.8;
+              "
+            >
+              Server-Trailer • Server-Vorstellungen • Builds
+            </small>
+          </a>
+          <a
+            href="https://www.twitch.tv/sytrexofficial"
+            class="social-btn twitch"
+            target="_blank"
+            style="
+              min-width: 260px;
+              padding: 1.4rem 2.5rem;
+              font-size: 1.25rem;
+              order: -1;
+            "
+          >
+            <i class="fab fa-twitch"></i>
+            Twitch
+            <small
+              style="
+                display: block;
+                font-size: 0.82rem;
+                margin-top: 0.4rem;
+                opacity: 0.8;
+              "
+            >
+              Live Minecraft • Citybuild • Q&A • Community-Events
+            </small>
+          </a>
+          <a
+            href="https://discord.gg/Zx6hG7WNYu"
+            class="social-btn discord"
+            target="_blank"
+            style="
+              min-width: 280px;
+              padding: 1.5rem 2.8rem;
+              font-size: 1.3rem;
+              background: linear-gradient(145deg, #7289da, #5865f2);
+              border-color: #7289da;
+            "
+          >
+            <i class="fab fa-discord"></i>
+            Discord beitreten
+            <small
+              style="
+                display: block;
+                font-size: 0.85rem;
+                margin-top: 0.5rem;
+                opacity: 0.9;
+              "
+            >
+              → Community • Support • Updates • Voice-Chat
+            </small>
+          </a>
+          <a
+            href="https://github.com/Sytrexofficial"
+            class="social-btn github"
+            target="_blank"
+          >
+            <i class="fab fa-github"></i> GitHub
+            <small
+              style="
+                display: block;
+                font-size: 0.8rem;
+                margin-top: 0.6rem;
+                opacity: 0.75;
+              "
+            >
+              Meine Plugins & Open-Source-Projekte
+            </small>
+          </a>
+          <a
+            href="https://www.tiktok.com/@realsytrex"
+            class="social-btn tiktok"
+            target="_blank"
+          >
+            <i class="fab fa-tiktok"></i> TikTok
+            <small
+              style="
+                display: block;
+                font-size: 0.8rem;
+                margin-top: 0.6rem;
+                opacity: 0.75;
+              "
+            >
+              Shorts & Behind the Scenes
+            </small>
+          </a>
+        </div>
+        <p style="margin-top: 3.5rem; font-size: 1.1rem; opacity: 0.85">
+          Am aktivsten bin ich aktuell auf <strong>YouTube</strong> und
+          <strong>Discord</strong>, komm gerne vorbei! ❤️
+        </p>
+      </section>
+      <section id="videos">
+        <h2>Videos & Builds</h2>
+        <div class="videos-grid">
+          <div class="video-card">
+            <div class="video-wrapper">
+              <iframe
+                src="https://www.youtube.com/embed/MKfOqcG8tu4"
+                title="Geändertes YouTube‑Video"
+                allow="
+                  accelerometer;
+                  autoplay;
+                  clipboard-write;
+                  encrypted-media;
+                  gyroscope;
+                  picture-in-picture;
+                "
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            </div>
+            <div class="video-info">
+              <h3>Neuestes Video</h3>
+              <p>
+                Der aktuelle Trailer von Sytrex.NET – schau dir an, was alles
+                neu ist!
+              </p>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-wrapper">
+              <iframe
+                src="https://www.youtube.com/embed/h9CHrWh3JYY"
+                title="Neueste Builds"
+                allow="
+                  accelerometer;
+                  autoplay;
+                  clipboard-write;
+                  encrypted-media;
+                  gyroscope;
+                  picture-in-picture;
+                "
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            </div>
+            <div class="video-info">
+              <h3>Neueste Builds & Highlights</h3>
+              <p>
+                Meine krassesten Bauwerke der letzten Monate – Citybuild-Plots,
+                Spawn, Event-Areas und mehr!
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <footer>Made with <span>♥</span> by zero269 • © 2026 Sytrex</footer>
+    <script>
+      window.addEventListener("scroll", () => {
+        document
+          .querySelector(".navbar")
+          .classList.toggle("scrolled", window.scrollY > 60);
+      });
+    </script>
+  </body>
+</html>
