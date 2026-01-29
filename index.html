@@ -343,12 +343,7 @@
         background: var(--card);
         backdrop-filter: blur(4px);
       }
-      html {
-        scroll-snap-type: y mandatory;
-      }
-      section {
-        scroll-snap-align: start;
-      }
+
       .avatar-container:hover {
         transform: scale(1.05) rotate(1.5deg);
         box-shadow: 0 0 100px var(--accent-glow);
@@ -1024,7 +1019,19 @@
         </div>
       </section>
     </div>
-    <footer>Made with <span>♥</span> by zero269 • © 2026 Sytrex</footer>
+    <!-- Footer -->
+    <footer>
+      <p>Made with <span>♥</span> by zero269 • © 2026 Sytrex</p>
+      <p>
+        <a
+          href="impressum.html"
+          style="color: var(--accent); text-decoration: underline"
+        >
+          Impressum
+        </a>
+      </p>
+    </footer>
+
     <script>
       window.addEventListener("scroll", () => {
         document
